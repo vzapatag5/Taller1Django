@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Recomendación por embeddings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; max-width: 920px; }
+    .row { display: flex; gap: 16px; align-items: flex-start; }
+    img { width: 180px; max-width: 100%; height: auto; border-radius: 8px; object-fit: cover; }
+    .muted { color: #666; font-size: 0.9rem; }
+    .error { color: #b00020; margin: 12px 0; }
+    form { display: flex; gap: 8px; margin-bottom: 16px; }
+    input[type="text"] { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc; }
+    button { padding: 10px 14px; border-radius: 8px; border: 1px solid #222; background: #222; color: #fff; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Sistema de Recomendación</h1>
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+      <input type="text" name="q" placeholder="Ej: película de la segunda guerra mundial" value="{{ query }}">
+      <button type="submit">Recomendar</button>
+    </form>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if result %}
+      <h2>Recomendación</h2>
+      <p class="muted">Similitud: {{ similarity }}</p>
+      <div class="row">
+        {% if result.image %}
+          <!-- Caso ImageField -->
+          <img src="{{ result.image.url }}" alt="{{ result.title }}">
+        {% elif result.image_url %}
+          <!-- Caso URL externa -->
+          <img src="{{ result.image_url }}" alt="{{ result.title }}">
+        {% elif result.image_path %}
+          <!-- Caso archivo en /static/ -->
+          <img src="{% static result.image_path %}" alt="{{ result.title }}">
+        {% else %}
+          <!-- Fallback -->
+          <img src="https://picsum.photos/300?blur=1" alt="Sin imagen disponible">
+        {% endif %}
+
+        <div>
+          <h3>{{ result.title }}</h3>
+          <p>{{ result.description }}</p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>

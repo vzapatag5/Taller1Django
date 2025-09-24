@@ -1,6 +1,7 @@
 from django.urls import path
-from . import views
+from .views import recommend_view
 
+app_name = "movie"
 urlpatterns = [
-    path('recommend/', views.recommend, name='recommend'),
+    path("recommend/", recommend_view, name="recommend"),
 ]
