@@ -87,7 +87,7 @@ def statistics(request):
     
     # Cargar API Key desde openAI.env o variables de entorno
 load_dotenv("openAI.env")
-client = OpenAI(api_key=os.environ.get("openai_apikey"))
+client = OpenAI(api_key=os.environ.get("openai_api_key"))
 
 def _cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     # Evita divisiones por cero
